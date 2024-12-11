@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text To Cuneiform</title>
+  <style>
+    body {
+      font-family: "Vazir", sans-serif;
+      background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+      color: #ffd700;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 30px;
+      color: #ffd700;
+      text-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0px 0px 5px rgba(255, 215, 0, 0.7);
+      }
+      to {
+        text-shadow: 0px 0px 20px rgba(255, 215, 0, 1);
+      }
+    }
+
+    textarea, #output {
+      width: 90%;
+      max-width: 600px;
+      margin: 15px auto;
+      padding: 15px;
+      border-radius: 12px;
+      border: none;
+      font-size: 1.2rem;
+      line-height: 1.8;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    textarea {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffd700;
+      border: 2px solid #ffd700;
+      outline: none;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    textarea:focus {
+      transform: scale(1.05);
+      box-shadow: 0px 8px 15px rgba(255, 215, 0, 0.5);
+    }
+
+    #output {
+      background: rgba(0, 0, 0, 0.8);
+      color: #ffd700;
+      min-height: 100px;
+      overflow-y: auto;
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    footer a {
+      color: #ffd700;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <h1>𐎶𐎫𐎴 𐎲𐏃 𐎧𐎫 𐎶𐎡𐎧𐎡</h1>
+  
+  <textarea id="input" placeholder="...write your text"></textarea>
+  
+  <div id="output"></div>
+  
+  <footer>𐎫𐎢𐎿𐎫 𐎱𐎠𐎶𐎣𐎡𐎴 𐎫𐎡𐎶 - By PumkinTeam<a </a>
+  </footer>
+
+  <script>
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+
+    const cuneiformMapping = {
+      'آ': '𐎠', 'ا': '𐎠', 'ع': '𐎠', 'اَ': '𐎠',
+      'ب': '𐎲', 'پ': '𐎱', 'ت': '𐎫', 'ط': '𐎫',
+      'ث': '𐎰', 'ج': '𐎩', 'چ': '𐎨', 'ح': '𐏃',
+      'خ': '𐎧', 'د': '𐎭', 'ذ': '𐏀', 'ر': '𐎼',
+      'ز': '𐏀', 'س': '𐎿', 'ش': '𐏁', 'ص': '𐎿',
+      'ض': '𐏀', 'غ': '𐎥', 'ق': '𐎥', 'ف': '𐎳',
+      'ک': '𐎣', 'گ': '𐎥', 'ل': '𐎾', 'م': '𐎶',
+      'ن': '𐎴', 'و': '𐎢', 'ه': '𐏃', 'ی': '𐎡',
+      '0': '𐎰', '1': '𐎱', '2': '𐎲', '3': '𐎳',
+      '4': '𐎴', '5': '𐎵', '6': '𐎶', '7': '𐎷',
+      '8': '𐎸', '9': '𐎹',
+    };
+
+    function toCuneiform(text) {
+      return text.split('').map(char => cuneiformMapping[char] || char).join('');
+    }
+
+    function fromCuneiform(text) {
+      const reverseMapping = Object.fromEntries(
+        Object.entries(cuneiformMapping).map(([key, value]) => [value, key])
+      );
+      return text.split('').map(char => reverseMapping[char] || char).join('');
+    }
+
+    input.addEventListener('input', () => {
+      const value = input.value;
+      if (value.match(/[\u1200-\u137F]/)) {
+        output.textContent = fromCuneiform(value);
+      } else {
+        output.textContent = toCuneiform(value);
+      }
+    });
+  </script>
+</body>
+</html>
